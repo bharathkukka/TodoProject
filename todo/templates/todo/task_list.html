@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-T-8">
+    <title>To-Do List</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f4f4f9; color: #333; }
+        .container { max-width: 600px; margin: 50px auto; padding: 20px; background: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 8px; }
+        h1 { text-align: center; color: #5c67f2; }
+        form { display: flex; margin-bottom: 20px; }
+        input[type="text"] { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
+        button { padding: 10px 15px; border: none; background: #5c67f2; color: #fff; border-radius: 4px; cursor: pointer; }
+        ul { list-style-type: none; padding: 0; }
+        li { display: flex; align-items: center; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; }
+        li.completed span { text-decoration: line-through; color: #aaa; }
+        .actions a { text-decoration: none; margin-left: 10px; color: #d9534f; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>My To-Do List</h1>
+        <form method="POST" action="{% url 'task_list' %}">
+            {% csrf_token %}
+            <input type="text" name="title" placeholder="Add a new task..." required>
+            <button type="submit">Add Task</button>
+        </form>
+
+        <ul>
+            {% for task in tasks %}
+                <li class="{% if task.completed %}completed{% endif %}">
+                    <a href="{% url 'task_update' task.id %}">
+                       <span>{{ task.title }}</span>
+                    </a>
+                    <div class="actions">
+                        <a href="{% url 'task_delete' task.id %}">Delete</a>
+                    </div>
+                </li>
+            {% empty %}
+                <li>No tasks yet.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
